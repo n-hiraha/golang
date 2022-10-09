@@ -2,6 +2,7 @@ version: "3.9"
 services:
   app:
     image: gotodo
+    container_name: todo-app
     build:
       args:
         - target=dev

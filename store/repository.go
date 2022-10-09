@@ -4,13 +4,16 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
+
 	"github.com/n-hiraha/golang/clock"
 	"github.com/n-hiraha/golang/config"
+
 	"time"
 )
 
-func new(ctx context.Context, cfg *config.Config) (*sqlx.DB, func(), error) {
+func New(ctx context.Context, cfg *config.Config) (*sqlx.DB, func(), error) {
 	// sqlx.Connectを使うと内部でpingする。
 	db, err := sql.Open("mysql",
 		fmt.Sprintf(

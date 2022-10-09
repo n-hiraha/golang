@@ -5,6 +5,7 @@ import (
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/n-hiraha/golang/clock"
 	"github.com/n-hiraha/golang/entity"
+	"github.com/n-hiraha/golang/testutil"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"

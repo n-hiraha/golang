@@ -1,8 +1,9 @@
 package handler
 
 import (
+	"context"
+	"errors"
 	"github.com/n-hiraha/golang/entity"
-	"github.com/n-hiraha/golang/store"
 	"github.com/n-hiraha/golang/testutil"
 	"net/http"
 	"net/http/httptest"
@@ -19,13 +20,13 @@ func TestListTask(t *testing.T) {
 		want  want
 	}{
 		"ok": {
-			tasks: map[entity.TaskID]*entity.Task{
-				1: {
+			tasks: []*entity.Task{
+				{
 					ID:     1,
 					Title:  "test1",
 					Status: "todo",
 				},
-				2: {
+				{
 					ID:     2,
 					Title:  "test2",
 					Status: "done",
@@ -52,7 +53,14 @@ func TestListTask(t *testing.T) {
 			w := httptest.NewRecorder()
 			r := httptest.NewRequest(http.MethodGet, "/tasks", nil)
 
-			sut := ListTask{Store: &store.TaskStore{Tasks: tt.tasks}}
+			moq := &ListTasksServiceMock{}
+			moq.ListTasksFunc = func(ctx context.Context) (entity.Tasks, error) {
+				if tt.tasks != nil {
+					return tt.tasks, nil
+				}
+				return nil, errors.New("error from mock")
+			}
+			sut := ListTask{Service: moq}
 			sut.ServeHTTP(w, r)
 
 			resp := w.Result()
